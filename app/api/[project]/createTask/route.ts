@@ -1,5 +1,6 @@
 import db from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from 'next/server';
 
 type Status = "ASSIGNED" | "PROGRESS" | "COMPLETED";
 
@@ -13,13 +14,11 @@ interface TaskInput {
 export async function POST(
   req: Request,
   { params }: { params: { project: string } }
-): Promise<Response> {
+): Promise<NextResponse> {  // Using NextResponse instead of Response
   try {
     const { userId } = await auth();
     if (!userId) {
-      return new Response(JSON.stringify({ message: "Unauthorized" }), {
-        status: 401,
-      });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const projectId = params.project;
@@ -31,9 +30,7 @@ export async function POST(
     });
 
     if (!project) {
-      return new Response(JSON.stringify({ message: "Invalid Project" }), {
-        status: 404,
-      });
+      return NextResponse.json({ message: "Invalid Project" }, { status: 404 });
     }
 
     // Parse request body
@@ -84,13 +81,15 @@ export async function POST(
       });
     }
 
-    return new Response(JSON.stringify({ message: "Task created successfully" }), {
-      status: 201,
-    });
+    return NextResponse.json(
+      { message: "Task created successfully" },
+      { status: 201 }
+    );
   } catch (error: any) {
     console.error("Error in creating task:", error.message);
-    return new Response(JSON.stringify({ error: "Error in creating task" }), {
-      status: 500,
-    });
+    return NextResponse.json(
+      { error: "Error in creating task" },
+      { status: 500 }
+    );
   }
 }
