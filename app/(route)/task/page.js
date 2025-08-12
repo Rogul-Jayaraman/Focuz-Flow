@@ -70,7 +70,7 @@ const Page = () => {
         <CardContent>
           <div>
             <h1>
-              Task belong's to <strong>{taskDetail.project.name}</strong> project
+              Task belongs to <strong>{taskDetail.project.name}</strong> project
             </h1>
           </div>
         </CardContent>
