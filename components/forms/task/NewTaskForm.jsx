@@ -23,7 +23,7 @@ const NewTaskForm = ({ closeTask }) => {
   const onSubmit = async(data) => {
     setIsSubmitting(true);
     try{
-      const res = await fetch(`/api/task/createTask`,{
+      const res = await fetch(`/api/tasks/createTask`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
