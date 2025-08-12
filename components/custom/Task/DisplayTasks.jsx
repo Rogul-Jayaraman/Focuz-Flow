@@ -55,11 +55,12 @@ const DisplayTasks = ({ projectId }) => {
   }
 
   const handleTaskClick = (event,taskId) => {
-    if(event.target!=editTaskRef){
-      window.location.href=`/task?id=${taskId}`
-    }
+      if (editTaskRef.current && editTaskRef.current.contains(event.target)) {
+    return;
   }
-
+    window.location.href=`/task?id=${taskId}`
+  }
+  const stopPropagation = (e) => e.stopPropagation();
   return (
     <div className="w-full">
       <div className="w-full flex items-center justify-between gap-8 p-4 border-b-2 border-b-gray-500/50">
@@ -108,7 +109,7 @@ const DisplayTasks = ({ projectId }) => {
                     </div>
                   </div>
                 </div>
-                <div ref={editTaskRef}>
+                <div className="more-option" onClick={stopPropagation} ref={editTaskRef}>
                   <MoreOption task={task} />
                 </div>
               </div>
