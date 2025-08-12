@@ -12,6 +12,10 @@ interface TaskInput {
   projectId: string;
 }
 
+interface TaskStatus {
+  currentStatus: Status;
+}
+
 export async function POST(req: Request): Promise<NextResponse> {
   try {
     const { userId } = await auth();
@@ -35,13 +39,13 @@ export async function POST(req: Request): Promise<NextResponse> {
       },
     });
 
-    // Fetch all tasks for the project to determine new status
-    const tasks = await db.task.findMany({
-      where: { projectId: task.projectId }, // fix here
+    // Fetch all tasks for the project with proper typing
+    const tasks: TaskStatus[] = await db.task.findMany({
+      where: { projectId: task.projectId },
       select: { currentStatus: true },
     });
 
-    // Fetch the current project status to compare before update
+    // Fetch current project status
     const project = await db.project.findUnique({
       where: { id: task.projectId },
       select: { currentStatus: true, id: true },
@@ -51,10 +55,11 @@ export async function POST(req: Request): Promise<NextResponse> {
       return NextResponse.json({ message: "Project not found" }, { status: 404 });
     }
 
+    // Determine new project status based on tasks statuses
     let newProjectStatus: Status;
-    const allCompleted = tasks.every((t:any) => t.currentStatus === "COMPLETED");
-    const anyProgress = tasks.some((t:any) => t.currentStatus === "PROGRESS");
-    const allAssigned = tasks.every((t:any) => t.currentStatus === "ASSIGNED");
+    const allCompleted = tasks.every((t) => t.currentStatus === "COMPLETED");
+    const anyProgress = tasks.some((t) => t.currentStatus === "PROGRESS");
+    const allAssigned = tasks.every((t) => t.currentStatus === "ASSIGNED");
 
     if (allCompleted) {
       newProjectStatus = "COMPLETED";
@@ -66,7 +71,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       newProjectStatus = "PROGRESS"; // mixed case
     }
 
-    // Only update if status actually changes
+    // Update project status only if it changed
     if (newProjectStatus !== project.currentStatus) {
       await db.project.update({
         where: { id: project.id },
