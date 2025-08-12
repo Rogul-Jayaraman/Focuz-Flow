@@ -38,12 +38,13 @@ export async function PATCH(req: Request): Promise<Response> {
       select: { currentStatus: true },
     });
 
+    type status="ASSIGNED" | "PROGRESS" | "COMPLETED";
     // Determine new project status
     let newProjectStatus: "ASSIGNED" | "PROGRESS" | "COMPLETED";
 
-    const allCompleted = tasks.every((t) => t.currentStatus === "COMPLETED");
-    const anyProgress = tasks.some((t) => t.currentStatus === "PROGRESS");
-    const allAssigned = tasks.every((t) => t.currentStatus === "ASSIGNED");
+    const allCompleted = tasks.every((t:{currentStatus:status}):boolean => t.currentStatus === "COMPLETED");
+    const anyProgress = tasks.some((t:{currentStatus:status}):boolean => t.currentStatus === "PROGRESS");
+    const allAssigned = tasks.every((t:{currentStatus:status}):boo => t.currentStatus === "ASSIGNED");
 
     if (allCompleted) {
       newProjectStatus = "COMPLETED";
