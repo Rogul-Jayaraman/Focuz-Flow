@@ -67,7 +67,7 @@ const ProjectCard = ({ projects }) => {
           headers: {
             content: "application/json",
           },
-          body: JSON.stringify(id),
+          body: JSON.stringify({id}),
         });
         if (!res.ok) {
           throw new Error("Internal Server Error");

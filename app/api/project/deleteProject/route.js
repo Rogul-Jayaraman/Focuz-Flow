@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function DELETE(req){
     try{
-        const id = await req.json();
+        const {id} = await req.json();
         if(!id){
             return new Response(JSON.stringify({message:"Server Error"}),{status:500})
         }
