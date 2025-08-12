@@ -29,13 +29,13 @@ export async function DELETE(req) {
     }
     await prisma.task.deleteMany({
       where: {
-        projectId: projectIdToDelete,
+        projectId: id,
       },
     });
 
     await prisma.project.delete({
       where: {
-        id: projectIdToDelete,
+        id: id,
       },
     });
 
