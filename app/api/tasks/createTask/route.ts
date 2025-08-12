@@ -40,7 +40,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     // Fetch all tasks for the project with proper typing
-    const tasks: {currentStatus:Status}[] = await db.task.findMany({
+    const tasks: { currentStatus: Status }[] = await db.task.findMany({
       where: { projectId: task.projectId },
       select: { currentStatus: true },
     });
@@ -52,14 +52,31 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     if (!project) {
-      return NextResponse.json({ message: "Project not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Project not found" },
+        { status: 404 }
+      );
     }
 
     // Determine new project status based on tasks statuses
     let newProjectStatus: Status;
-    const allCompleted = tasks.every((t:TaskStatus):boolean => t.currentStatus === "COMPLETED");
-    const anyProgress = tasks.some((t:TaskStatus):boolean => t.currentStatus === "PROGRESS");
-    const allAssigned = tasks.every((t:TaskStatus):boolean => t.currentStatus === "ASSIGNED");
+    let allCompleted = true;
+    let anyProgress = false;
+    let allAssigned = true;
+
+    for (let i = 0; i < tasks.length; i++) {
+      const status = tasks[i].currentStatus;
+
+      if (status !== "COMPLETED") {
+        allCompleted = false;
+      }
+      if (status === "PROGRESS") {
+        anyProgress = true;
+      }
+      if (status !== "ASSIGNED") {
+        allAssigned = false;
+      }
+    }
 
     if (allCompleted) {
       newProjectStatus = "COMPLETED";
