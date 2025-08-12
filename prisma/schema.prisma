@@ -1,0 +1,54 @@
+  generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEON_DB")
+}
+
+model user{
+  id              String      @id @default(uuid())
+  clerkUserId     String      @unique
+  userName        String      @unique
+  email           String      @unique
+  name            String 
+  imageURL        String?     
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  projects        project[]   @relation("userProject")
+}
+model project{
+  id             String       @id @default(uuid())
+  name           String       
+  description    String
+  startTime      DateTime
+  endTime        DateTime
+  currentStatus  status
+  isDone         Boolean      @default(false)
+  tasks          task[]       @relation("projectTasks")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  userId         String       
+  user           user         @relation("userProject", fields: [userId], references: [id],onDelete: Cascade)
+}
+model task{
+  id            String        @id @default(uuid())
+  name          String
+  description   String
+  remarks       String?
+  startTime     DateTime
+  endTime       DateTime
+  currentStatus status
+  isDone        Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  projectId     String
+  project       project       @relation("projectTasks",fields: [projectId], references: [id], onDelete: Cascade)
+}
+enum status{
+  ASSIGNED
+  PROGRESS
+  COMPLETED
+}
