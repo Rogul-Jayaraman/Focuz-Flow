@@ -19,8 +19,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={notoSans.className}>
+      <html lang="en" className={notoSans.className}>
+        <body>
           <LoadApiContextProvider>
             <Header />
             <main className="min-h-screen bg-gradient-to-b from-orange-100/50 to-white">
