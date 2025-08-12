@@ -29,6 +29,6 @@ export async function DELETE(req){
         return new Response(JSON.stringify({message:"Success"}),{status:200})
     }catch(err){
         console.log("Error in deleting the project",err.message);
-        throw new Error(JSON.stringify({message:"Error while deleting the project"}),{status:500})
+        return new Response(JSON.stringify({message:"Error while deleting the project"}),{status:500})
     }
 }
