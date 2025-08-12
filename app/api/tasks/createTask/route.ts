@@ -57,9 +57,9 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     // Determine new project status based on tasks statuses
     let newProjectStatus: Status;
-    const allCompleted = tasks.every((t) => t.currentStatus === "COMPLETED");
-    const anyProgress = tasks.some((t) => t.currentStatus === "PROGRESS");
-    const allAssigned = tasks.every((t) => t.currentStatus === "ASSIGNED");
+    const allCompleted = tasks.every((t:TaskStatus) => t.currentStatus === "COMPLETED");
+    const anyProgress = tasks.some((t:TaskStatus) => t.currentStatus === "PROGRESS");
+    const allAssigned = tasks.every((t:TaskStatus) => t.currentStatus === "ASSIGNED");
 
     if (allCompleted) {
       newProjectStatus = "COMPLETED";
