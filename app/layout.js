@@ -1,4 +1,4 @@
-import { NotoSans } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/custom/HF/Header";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -6,7 +6,7 @@ import Footer from "@/components/custom/HF/Footer";
 import CreateNewProject from "@/components/custom/Project/CreateNewProject";
 import LoadApiContextProvider from "@/components/context/LoadApiContextProvider";
 
-const notoSans = NotoSans({
+const notoSans = Noto_Sans({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
