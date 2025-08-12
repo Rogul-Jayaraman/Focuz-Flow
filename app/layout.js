@@ -6,7 +6,7 @@ import Footer from "@/components/custom/HF/Footer";
 import CreateNewProject from "@/components/custom/Project/CreateNewProject";
 import LoadApiContextProvider from "@/components/context/LoadApiContextProvider";
 
-const notoSans = Noto_Sans({
+const notoSans = NotoSans({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
