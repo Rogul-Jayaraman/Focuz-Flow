@@ -40,7 +40,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     // Fetch all tasks for the project with proper typing
-    const tasks: TaskStatus[] = await db.task.findMany({
+    const tasks: {currentStatus:Status}[] = await db.task.findMany({
       where: { projectId: task.projectId },
       select: { currentStatus: true },
     });
