@@ -1,11 +1,10 @@
-import { Noto_Sans } from "next/font/google";
+import { NotoSans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/custom/HF/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import Footer from "@/components/custom/HF/Footer";
 import CreateNewProject from "@/components/custom/Project/CreateNewProject";
 import LoadApiContextProvider from "@/components/context/LoadApiContextProvider";
-import CreateNewTask from "@/components/custom/Task/CreateNewTask";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
