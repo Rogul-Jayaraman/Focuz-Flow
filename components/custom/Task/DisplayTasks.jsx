@@ -20,7 +20,7 @@ const DisplayTasks = ({ projectId }) => {
   const getProjects = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/${projectId}/getTasks`, {
+      const res = await fetch(`/api/task/getTasks?id=${projectId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

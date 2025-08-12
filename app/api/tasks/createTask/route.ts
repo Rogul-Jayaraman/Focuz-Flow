@@ -1,6 +1,6 @@
 import db from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 type Status = "ASSIGNED" | "PROGRESS" | "COMPLETED";
 
@@ -9,28 +9,14 @@ interface TaskInput {
   description: string;
   startDate: Date;
   endDate: Date;
+  projectId: string;
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { project: string } }
-): Promise<NextResponse> {  // Using NextResponse instead of Response
+export async function POST(req: Request): Promise<NextResponse> {
   try {
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const projectId = params.project;
-
-    // Validate project
-    const project = await db.project.findUnique({
-      where: { id: projectId },
-      select: { id: true, currentStatus: true },
-    });
-
-    if (!project) {
-      return NextResponse.json({ message: "Invalid Project" }, { status: 404 });
     }
 
     // Parse request body
@@ -44,21 +30,31 @@ export async function POST(
         startTime: task.startDate,
         endTime: task.endDate,
         currentStatus: "ASSIGNED",
-        projectId: project.id,
+        projectId: task.projectId,
         remarks: "",
       },
     });
 
     // Fetch all tasks for the project to determine new status
     const tasks = await db.task.findMany({
-      where: { projectId },
+      where: { projectId: task.projectId }, // fix here
       select: { currentStatus: true },
     });
 
+    // Fetch the current project status to compare before update
+    const project = await db.project.findUnique({
+      where: { id: task.projectId },
+      select: { currentStatus: true, id: true },
+    });
+
+    if (!project) {
+      return NextResponse.json({ message: "Project not found" }, { status: 404 });
+    }
+
     let newProjectStatus: Status;
-    const allCompleted = tasks.every((t) => t.currentStatus === "COMPLETED");
-    const anyProgress = tasks.some((t) => t.currentStatus === "PROGRESS");
-    const allAssigned = tasks.every((t) => t.currentStatus === "ASSIGNED");
+    const allCompleted = tasks.every((t:any) => t.currentStatus === "COMPLETED");
+    const anyProgress = tasks.some((t:any) => t.currentStatus === "PROGRESS");
+    const allAssigned = tasks.every((t:any) => t.currentStatus === "ASSIGNED");
 
     if (allCompleted) {
       newProjectStatus = "COMPLETED";

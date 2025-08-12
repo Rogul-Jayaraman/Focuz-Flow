@@ -3,21 +3,18 @@ import { auth } from "@clerk/nextjs/server";
 
 type Status = "ASSIGNED" | "PROGRESS" | "COMPLETED";
 
-type Task = {
-  id: string;
-  name: string;
-  description: string;
-  currentStatus: Status;
-  startTime: Date;
-  endTime: Date;
-};
-
-export async function GET(
-  req: Request,
-  { params }: { params: { project: string } }
-): Promise<Response> {
+export async function GET(req: Request): Promise<Response> {
   try {
-    const { project: projectId } = params;
+    const url = new URL(req.url);
+    const projectId = url.searchParams.get("id");
+
+    if (!projectId) {
+      return new Response(
+        JSON.stringify({ message: "Project ID is required" }),
+        { status: 400 }
+      );
+    }
+
     const { userId } = await auth();
 
     if (!userId) {
@@ -70,7 +67,7 @@ export async function GET(
       headers: { "Content-Type": "application/json" },
     });
   } catch (err: any) {
-    console.error("Error in getting-tasks:", err.message);
+    console.error("Error in getting tasks:", err.message);
     return new Response(JSON.stringify({ message: "Internal Server Error" }), {
       status: 500,
     });
