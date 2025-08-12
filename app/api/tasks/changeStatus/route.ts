@@ -44,7 +44,7 @@ export async function PATCH(req: Request): Promise<Response> {
 
     const allCompleted = tasks.every((t:{currentStatus:status}):boolean => t.currentStatus === "COMPLETED");
     const anyProgress = tasks.some((t:{currentStatus:status}):boolean => t.currentStatus === "PROGRESS");
-    const allAssigned = tasks.every((t:{currentStatus:status}):boo => t.currentStatus === "ASSIGNED");
+    const allAssigned = tasks.every((t:{currentStatus:status}):boolean => t.currentStatus === "ASSIGNED");
 
     if (allCompleted) {
       newProjectStatus = "COMPLETED";
