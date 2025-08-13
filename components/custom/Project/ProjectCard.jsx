@@ -62,12 +62,11 @@ const ProjectCard = ({ projects }) => {
     try {
       if (window.confirm("Are you sure you want to delete this event")) {
         setDeleteId(id);
-        const res = await fetch("/api/project/deleteProject", {
+        const res = await fetch(`/api/project/deleteProject?id=${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-          },
-          body: JSON.stringify({id}),
+          }
         });
         if (!res.ok) {
           throw new Error("Internal Server Error");
@@ -75,7 +74,7 @@ const ProjectCard = ({ projects }) => {
         reloadProject()
       }
     } catch (err) {
-      console.log("Error while Deleteing-Project : ", err.message);
+      console.log("Error while Deleteing-Project : ", err);
     } finally {
       setDeleteStatus(false);
     }
