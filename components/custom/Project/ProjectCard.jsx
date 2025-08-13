@@ -62,10 +62,10 @@ const ProjectCard = ({ projects }) => {
     try {
       if (window.confirm("Are you sure you want to delete this event")) {
         setDeleteId(id);
-        const res = await fetch("api/project/deleteProject", {
+        const res = await fetch("/api/project/deleteProject", {
           method: "DELETE",
           headers: {
-            content: "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({id}),
         });
